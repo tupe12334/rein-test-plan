@@ -41,6 +41,11 @@ export default async function reviseAgain({ feature, tracker, key, notes,
   const wrote: Written = await request(@./write_plan(notes=notes, plan=plan,
     feature=feature, gaps=gaps));
 
+  if (!wrote.written) {
+    return `Return: the plan not saved to ${plan}. Nothing posted.`;
+  }
+
+
   /** The coverage of the plan after the last pass. */
   const cov: Cover = await request(@./check_coverage(notes=notes, plan=plan));
 

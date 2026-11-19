@@ -46,10 +46,13 @@ interface Cover {
 export default async function runPlan({ feature, tracker, key, name }: Input) {
   /** The work folder, with its notes file and its plan file. */
   const work: Work = await request(@./run_plan/make_work(name=name));
-
   /** The ticket, read into the notes. */
   const ticket: Ticket = await request(@./read_ticket(tracker=tracker,
     key=key, notes=work.notes));
+
+  if (!ticket.read) {
+    return `Return: the ticket ${key} could not be read. Nothing posted.`;
+  }
 
   /** Fathom and claude.ai Meetings, appended to the notes. */
   const meetings: Found = await request(@./collect/meetings(key=key,
@@ -58,15 +61,17 @@ export default async function runPlan({ feature, tracker, key, name }: Input) {
   const slack: Found = await request(@./collect/slack(key=key,
     feature=feature, notes=work.notes));
   /** Linked pull requests and branches, appended to the notes. */
-  const code: Found = await request(@./collect/code(key=key,
-    notes=work.notes));
+  const code: Found = await request(@./collect/code(key=key, notes=work.notes));
   /** Public docs the feature needs, appended to the notes. */
   const online: Found = await request(@./collect/online(feature=feature,
     notes=work.notes));
-
-  /** The first pass of the plan, and its coverage. */
+  /** The first pass of the plan. */
   const wrote: Written = await request(@./write_plan(notes=work.notes,
     plan=work.plan, feature=feature, gaps=`none`));
+  if (!wrote.written) {
+    return `Return: the plan not saved to ${work.plan}. Nothing posted.`;
+  }
+
   /** The coverage of the first pass. */
   const cov: Cover = await request(@./check_coverage(notes=work.notes,
     plan=work.plan));

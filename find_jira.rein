@@ -14,7 +14,7 @@ export default function findJira({ feature }: Input) {
     when exactly one ticket fits, otherwise no. Before found yes, read the
     same key in Linear with the Linear tools: if Linear has an issue with it,
     answer found no, since the key is ambiguous. If Linear cannot be read,
-    answer found no too. Answer tracker: jira when
+    skip this check and answer as above. Answer tracker: jira when
     found, otherwise none. Answer key: the ticket key, such as ABC-123, or
     none. Answer name: the key with each character that is not a letter, a
     digit or a dash changed to a dash, or none. Never guess a ticket. Change

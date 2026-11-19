@@ -23,7 +23,7 @@ The answer is one line: `Return: plan <path>. Comment <link>.`, or `Return: plan
 
 ## Process
 
-1. The ticket is found (`main.rein`). Jira is searched first (`find_jira.rein`), then GitHub issues (`find_github.rein`), then Linear (`find_linear.rein`). A search that finds exactly one ticket ends the search. A search that finds two or more tickets finds none, and the next tracker is searched. A key that Jira and Linear both hold is ambiguous, so it finds none in both. A feature with no ticket asks the user for the ticket, and the process stops.
+1. The ticket is found (`main.rein`). Jira is searched first (`find_jira.rein`), then GitHub issues in the repo that the feature names (`find_github.rein`), then Linear (`find_linear.rein`). A search that finds exactly one ticket ends the search. A search that finds two or more tickets finds none, and the next tracker is searched. A key that Jira and Linear both hold is ambiguous, so it finds none in both. A feature with no ticket asks the user for the ticket, and the process stops.
 2. A work folder is made with its notes file and its plan file (`run_plan/make_work.rein`, `scripts/make-work.sh`). The folder is under the home folder, in `test-plan-work`.
 3. The ticket is read into the notes, with its acceptance criteria, its sub-tasks, its linked pull requests, its docs and its people (`read_ticket.rein`).
 4. Four sources are collected into the notes. Each is a function of its own, and each answers whether it found a fact. A source with nothing is not an error:
@@ -44,12 +44,12 @@ The comment on the ticket reaches the team. The program posts only when a caller
 ## Accepted risks
 
 - The ticket match, the source answers and the coverage answers are agent answers. A wrong match or a missed fact reaches the plan. Each fact carries its source link, so a reader can check it.
-- The plan is posted as it is written, after a check for secrets and personal data in the request text. The check is an agent answer.
+- The plan is posted as it is written, after a check for secrets and personal data in the plan. The check is an agent answer.
 - The gaps after three passes are listed, not closed. A reader must still read the open questions.
 
 ## Known limits
 
-- The rein check reports eight warnings: single-caller verbs at `collect/`, `deliver/` and `run_plan/` could move into their caller's folder. The paths follow the design, so the warnings stay.
+- The rein check reports nine warnings. Eight say that single-caller verbs at `collect/`, `deliver/` and `run_plan/` could move into their caller's folder. The paths follow the design, so they stay. The ninth asks for an empty line before an `if` in `run_plan.rein`: `run_plan` is at the 40-line limit, so the line is not added.
 - The package has no peer dependencies. The program hands off to its own verbs only.
 - The walks check the text of each rule, not the answers. The answers are checked by a run.
 

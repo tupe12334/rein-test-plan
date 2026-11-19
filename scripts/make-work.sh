@@ -6,5 +6,5 @@ name=$(printf '%s' "${1:-run}" | tr -cd 'A-Za-z0-9._-')
 case "$name" in .|..|'') name=run ;; esac
 dir="$HOME/test-plan-work/$name"
 mkdir -p "$dir" || exit 1
-: >> "$dir/notes.md" || exit 1
+: > "$dir/notes.md" || exit 1
 printf '%s\n' "$dir"
