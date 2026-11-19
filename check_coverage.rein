@@ -16,5 +16,6 @@ export default function checkCoverage({ notes, plan }: Input) {
     cases table of ${plan}. Otherwise answer covered no, including when no
     acceptance criterion is listed in ${notes}. Answer gaps: one line
     per criterion or risk with no test case, as its name and its source,
-    separated by semicolons, or none when covered. Change nothing.`;
+    separated by semicolons, or none when covered. When no criterion is
+    listed, the gap is: no acceptance criteria in the ticket. Change nothing.`;
 }
