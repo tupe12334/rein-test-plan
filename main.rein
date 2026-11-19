@@ -1,3 +1,8 @@
+import { findJira } from "./find_jira";
+import { runPlan } from "./run_plan";
+import { findGithub } from "./find_github";
+import { findLinear } from "./find_linear";
+
 interface Input {
   /** The feature: a Jira key or link, a GitHub or Linear link, or a name. */
   feature: string;
@@ -20,26 +25,26 @@ interface Found {
  */
 export default async function main({ feature }: Input) {
   /** The ticket in Jira, if there is one. */
-  const jira: Found = await request(@./find_jira(feature=feature));
+  const jira: Found = await request(findJira(feature=feature));
 
   if (jira.found) {
-    return @./run_plan(feature=feature, tracker=jira.tracker, key=jira.key,
+    return runPlan(feature=feature, tracker=jira.tracker, key=jira.key,
       name=jira.name);
   }
 
   /** The ticket in GitHub issues, if there is one. */
-  const github: Found = await request(@./find_github(feature=feature));
+  const github: Found = await request(findGithub(feature=feature));
 
   if (github.found) {
-    return @./run_plan(feature=feature, tracker=github.tracker,
+    return runPlan(feature=feature, tracker=github.tracker,
       key=github.key, name=github.name);
   }
 
   /** The ticket in Linear, if there is one. */
-  const linear: Found = await request(@./find_linear(feature=feature));
+  const linear: Found = await request(findLinear(feature=feature));
 
   if (linear.found) {
-    return @./run_plan(feature=feature, tracker=linear.tracker,
+    return runPlan(feature=feature, tracker=linear.tracker,
       key=linear.key, name=linear.name);
   }
 
