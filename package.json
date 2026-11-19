@@ -1,6 +1,6 @@
 {
   "name": "test-plan",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Build a test plan for a feature from its ticket, its meetings, its Slack, its code and public docs.",
   "license": "MIT",
   "repository": "github:tupe12334/rein-test-plan",
