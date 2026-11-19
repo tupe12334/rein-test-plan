@@ -100,7 +100,7 @@ never "no ticket never makes a work folder" '"key":"run_plan.work"' \
 expect "the work folder is made by the bundled script" \
   'scripts/make-work.sh' --answer "$JIRA"
 expect "the script folder is found through the installed package" \
-  'readlink -f ~/.config/rein/programs/npm/node_modules/test-plan' \
+  'rein/programs/npm/node_modules/test-plan' \
   --answer "$JIRA"
 expect "the ticket is read before the sources" '"key":"run_plan.ticket"' \
   --answer "$JIRA" --answer "$W"

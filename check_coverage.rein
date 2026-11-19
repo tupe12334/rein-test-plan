@@ -12,8 +12,8 @@ interface Input {
 export default function checkCoverage({ notes, plan }: Input) {
   return `Read ${notes} and ${plan}. List each acceptance criterion of the
     ticket in ${notes}, and each risk in ${plan}. Answer covered yes only when
-    each criterion and each risk has at least one test case id in the test
-    cases table of ${plan}. Otherwise answer covered no, including when no
+    each criterion and each risk has at least one test case id in the coverage
+    table of ${plan}. Otherwise answer covered no, including when no
     acceptance criterion is listed in ${notes}. Answer gaps: one line
     per criterion or risk with no test case, as its name and its source,
     separated by semicolons, or none when covered. When no criterion is
