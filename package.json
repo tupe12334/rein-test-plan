@@ -1,0 +1,23 @@
+{
+  "name": "test-plan",
+  "version": "0.1.0",
+  "description": "Build a test plan for a feature from its ticket, its meetings, its Slack, its code and public docs.",
+  "license": "MIT",
+  "repository": "github:tupe12334/rein-test-plan",
+  "keywords": [
+    "rein",
+    "test-plan",
+    "jira",
+    "fathom",
+    "slack"
+  ],
+  "files": [
+    "**/*.rein",
+    "scripts/",
+    "README.md",
+    "rein.json"
+  ],
+  "engines": {
+    "rein": "^0.1.0"
+  }
+}

@@ -1,0 +1,17 @@
+interface Input {
+  /** The test plan file to change, as an absolute path. */
+  plan: string;
+  /** The gaps that the last pass did not close, separated by semicolons. */
+  gaps: string;
+}
+
+/**
+ * The text that lists the gaps of the last pass under the open questions of
+ * the plan. It changes only that section.
+ */
+export default function listGaps({ plan, gaps }: Input) {
+  return `Open ${plan}. Under the heading Open questions, add one line for each
+    gap: ${gaps}. Mark each line as a coverage gap, and keep its source. Save
+    the file. Answer listed yes when the file is saved, otherwise no. Change
+    nothing else.`;
+}

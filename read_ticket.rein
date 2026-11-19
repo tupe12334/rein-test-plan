@@ -1,0 +1,23 @@
+interface Input {
+  /** The tracker of the ticket: jira, github or linear. */
+  tracker: string;
+  /** The ticket key, such as ABC-123. */
+  key: string;
+  /** The notes file that the facts are appended to. */
+  notes: string;
+}
+
+/**
+ * The text that reads the ticket into the notes. It posts nothing.
+ */
+export default function readTicket({ tracker, key, notes }: Input) {
+  return `Read the ticket ${key} in the ${tracker} tracker. For jira, use
+    getJiraIssue with its comments. For github, use gh issue view with the
+    repo and number of ${key}, and its comments. For linear, use the Linear
+    tools. Append to ${notes} the title, the description, the acceptance
+    criteria, the sub-tasks, the linked pull requests and branches, the linked
+    docs, the people (assignee and reporter) and the comments. Write each fact
+    as one line with its source link. Copy no secret and no customer's personal
+    data. Answer read yes when the ticket was read, otherwise no. Post nothing.
+    Change nothing else.`;
+}

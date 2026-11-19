@@ -1,0 +1,30 @@
+interface Input {
+  /** The notes file that holds the facts, each with its source. */
+  notes: string;
+  /** The test plan file to write, as an absolute path. */
+  plan: string;
+  /** The feature, as the user named it. */
+  feature: string;
+  /** The gaps to close in this pass, separated by semicolons, or none. */
+  gaps: string;
+}
+
+/**
+ * The text that writes the test plan from the notes. It writes one file and
+ * posts nothing.
+ */
+export default function writePlan({ notes, plan, feature, gaps }: Input) {
+  return `Read ${notes}. Write the test plan of ${feature} to ${plan}, in
+    markdown, with these sections in this order: Summary, with its sources.
+    Scope and out of scope. Risks, ranked from high to low. Environments,
+    test data and roles. Test cases, as a table with the columns id, area,
+    preconditions, steps, expected result, priority (P0 to P2), type (manual,
+    e2e, unit or api) and source link. Acceptance criteria coverage, as a table
+    with one row for each criterion and the ids of its test cases. Open
+    questions, each with its source. Each fact has its source link. A source
+    with no fact is not an error: list it under Open questions. When gaps is
+    not none, add a test case for each gap, and keep the other cases. Gaps:
+    ${gaps}. Never write a secret, a token or a customer's personal data into
+    the plan. Answer written yes when the file is saved, otherwise no. Post
+    nothing.`;
+}

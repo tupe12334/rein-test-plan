@@ -1,0 +1,5 @@
+#!/bin/sh
+command -v rein >/dev/null || { echo "rein not found; install it to push"; exit 1; }
+rein check . || exit 1
+scripts/test-flow-rules.sh || exit $?
+shellcheck scripts/*.sh

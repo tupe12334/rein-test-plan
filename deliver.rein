@@ -1,0 +1,31 @@
+interface Input {
+  /** The tracker of the ticket: jira, github or linear. */
+  tracker: string;
+  /** The ticket key, such as ABC-123. */
+  key: string;
+  /** The test plan file to deliver, as an absolute path. */
+  plan: string;
+}
+
+interface Posted {
+  /** Was the plan posted as a comment on the ticket? */
+  posted: boolean;
+  /** The link of the comment, or none. */
+  link: string;
+}
+
+/**
+ * Post the test plan where the team reads it: a comment on the ticket. The
+ * plan file stays in the work folder.
+ */
+export default async function deliver({ tracker, key, plan }: Input) {
+  /** The comment on the ticket. */
+  const posted: Posted = await request(@./deliver/post_plan(tracker=tracker,
+    key=key, plan=plan));
+
+  if (posted.posted) {
+    return `Return: plan ${plan}. Comment ${posted.link}.`;
+  }
+
+  return `Return: plan ${plan}. The comment failed. Nothing posted to ${key}.`;
+}

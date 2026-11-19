@@ -1,0 +1,47 @@
+interface Input {
+  /** The feature, as the user named it. */
+  feature: string;
+  /** The tracker of the ticket: jira, github or linear. */
+  tracker: string;
+  /** The ticket key, such as ABC-123. */
+  key: string;
+  /** The notes file of this run, as an absolute path. */
+  notes: string;
+  /** The test plan file of this run, as an absolute path. */
+  plan: string;
+  /** The gaps in the coverage of the first pass, separated by semicolons. */
+  gaps: string;
+}
+
+interface Written {
+  /** Is the test plan saved? */
+  written: boolean;
+}
+
+interface Cover {
+  /** Does every criterion and every risk have a test case? */
+  covered: boolean;
+  /** The gaps in the coverage, or none. */
+  gaps: string;
+}
+
+/**
+ * The second pass: write the plan again to close the gaps, then check it. A
+ * plan that still has gaps goes to the last pass.
+ */
+export default async function revisePlan({ feature, tracker, key, notes,
+  plan, gaps }: Input) {
+  /** The plan, with a test case for each gap of the first pass. */
+  const wrote: Written = await request(@./write_plan(notes=notes, plan=plan,
+    feature=feature, gaps=gaps));
+
+  /** The coverage of the plan after the second pass. */
+  const cov: Cover = await request(@./check_coverage(notes=notes, plan=plan));
+
+  if (cov.covered) {
+    return @./deliver(tracker=tracker, key=key, plan=plan);
+  }
+
+  return @./revise_again(feature=feature, tracker=tracker, key=key,
+    notes=notes, plan=plan, gaps=cov.gaps);
+}

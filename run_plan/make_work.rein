@@ -1,0 +1,16 @@
+interface Input {
+  /** The ticket as a file name part, such as ABC-123. */
+  name: string;
+}
+
+/**
+ * The text that makes the work folder of a run, with its notes file. It
+ * changes only that folder.
+ */
+export default function makeWork({ name }: Input) {
+  return `Make the work folder of this run. Run:
+    P="$(readlink -f ~/.config/rein/programs/npm/node_modules/test-plan)"
+    bash "$P/scripts/make-work.sh" ${name}
+    The script prints the folder. Answer notes: the folder, then /notes.md.
+    Answer plan: the folder, then /test-plan-${name}.md. Change nothing else.`;
+}

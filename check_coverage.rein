@@ -1,0 +1,19 @@
+interface Input {
+  /** The notes file that holds the acceptance criteria, with sources. */
+  notes: string;
+  /** The test plan file to check, as an absolute path. */
+  plan: string;
+}
+
+/**
+ * The text that checks the coverage of the test plan: each acceptance
+ * criterion and each risk needs at least one test case. It changes nothing.
+ */
+export default function checkCoverage({ notes, plan }: Input) {
+  return `Read ${notes} and ${plan}. List each acceptance criterion of the
+    ticket in ${notes}, and each risk in ${plan}. Answer covered yes only when
+    each criterion and each risk has at least one test case id in the test
+    cases table of ${plan}. Otherwise answer covered no. Answer gaps: one line
+    per criterion or risk with no test case, as its name and its source,
+    separated by semicolons, or none when covered. Change nothing.`;
+}
