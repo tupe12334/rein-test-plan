@@ -1,0 +1,21 @@
+interface Input {
+  /** The feature: a Jira key or link, a GitHub or Linear link, or a name. */
+  feature: string;
+}
+
+/**
+ * The text that finds the Linear issue of a feature. It changes nothing.
+ */
+export default function findLinear({ feature }: Input) {
+  return `Find the Linear issue of the feature ${feature}. Answer found no when
+    ${feature} is a Jira or GitHub link or key. When it is a Linear link or
+    key, read that issue with the Linear tools. Otherwise search Linear issues
+    for the terms of the feature with the Linear tools. Answer found yes only
+    when exactly one issue fits, otherwise no. Before found yes, read the same
+    key in Jira with getJiraIssue: if Jira has a ticket with it, answer found
+    no, since the key is ambiguous. If Jira cannot be read, skip this check
+    and answer as above. Answer tracker: linear when
+    found, otherwise none. Answer key: the issue key, such as ENG-12, or none.
+    Answer name: the key with each character that is not a letter, a digit or
+    a dash changed to a dash, or none. Never guess an issue. Change nothing.`;
+}

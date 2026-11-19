@@ -1,0 +1,23 @@
+interface Input {
+  /** The ticket key, such as ABC-123. */
+  key: string;
+  /** The feature, as the user named it. */
+  feature: string;
+  /** The notes file that the facts are appended to. */
+  notes: string;
+}
+
+/**
+ * The text that collects the Slack messages, threads, call notes and canvases
+ * that name the ticket or the feature. It posts nothing.
+ */
+export default function slack({ key, feature, notes }: Input) {
+  return `Search Slack (slack_search_public_and_private) for the messages,
+    threads, huddle or call notes and canvases that mention ${key} or the
+    terms of ${feature}. Read each matching thread (slack_read_thread) and
+    canvas (slack_read_canvas). Append each fact to ${notes} as one line, with
+    the permalink of its message as its source. Answer found yes when at least
+    one line was appended, otherwise no. An empty search is not an error. Never
+    post or edit in Slack. Copy no secret and no customer's personal data.
+    Change nothing else.`;
+}

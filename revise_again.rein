@@ -1,0 +1,61 @@
+interface Input {
+  /** The feature, as the user named it. */
+  feature: string;
+  /** The tracker of the ticket: jira, github or linear. */
+  tracker: string;
+  /** The ticket key, such as ABC-123. */
+  key: string;
+  /** The notes file of this run, as an absolute path. */
+  notes: string;
+  /** The test plan file of this run, as an absolute path. */
+  plan: string;
+  /** The gaps in the coverage of the second pass, separated by semicolons. */
+  gaps: string;
+}
+
+interface Written {
+  /** Is the test plan saved? */
+  written: boolean;
+}
+
+interface Cover {
+  /** Does every criterion and every risk have a test case? */
+  covered: boolean;
+  /** The gaps in the coverage, or none. */
+  gaps: string;
+}
+
+interface Listed {
+  /** Are the gaps listed under the open questions? */
+  listed: boolean;
+}
+
+/**
+ * The last pass: write the plan again to close the gaps, then check it. A plan
+ * that still has gaps stops here: the gaps are listed as open questions, and
+ * the plan is delivered with them.
+ */
+export default async function reviseAgain({ feature, tracker, key, notes,
+  plan, gaps }: Input) {
+  /** The plan, with a test case for each gap of the second pass. */
+  const wrote: Written = await request(@./write_plan(notes=notes, plan=plan,
+    feature=feature, gaps=gaps));
+
+  if (!wrote.written) {
+    return `Return: the plan not saved to ${plan}. Nothing posted.`;
+  }
+
+
+  /** The coverage of the plan after the last pass. */
+  const cov: Cover = await request(@./check_coverage(notes=notes, plan=plan));
+
+  if (cov.covered) {
+    return @./deliver(tracker=tracker, key=key, plan=plan);
+  }
+
+  /** The gaps that no pass closed, listed as open questions. */
+  const listed: Listed = await request(@./list_gaps(plan=plan,
+    gaps=cov.gaps));
+
+  return @./deliver(tracker=tracker, key=key, plan=plan);
+}

@@ -1,0 +1,48 @@
+interface Input {
+  /** The feature: a Jira key or link, a GitHub or Linear link, or a name. */
+  feature: string;
+}
+
+interface Found {
+  /** Is the ticket of the feature found? */
+  found: boolean;
+  /** The tracker of the ticket: jira, github, linear, or none. */
+  tracker: string;
+  /** The ticket key, such as ABC-123, or none. */
+  key: string;
+  /** The ticket as a file name part, such as ABC-123, or none. */
+  name: string;
+}
+
+/**
+ * Find the ticket of a feature in the tracker that it lives in. Jira comes
+ * first, then GitHub issues, then Linear. With no ticket, the user is asked.
+ */
+export default async function main({ feature }: Input) {
+  /** The ticket in Jira, if there is one. */
+  const jira: Found = await request(@./find_jira(feature=feature));
+
+  if (jira.found) {
+    return @./run_plan(feature=feature, tracker=jira.tracker, key=jira.key,
+      name=jira.name);
+  }
+
+  /** The ticket in GitHub issues, if there is one. */
+  const github: Found = await request(@./find_github(feature=feature));
+
+  if (github.found) {
+    return @./run_plan(feature=feature, tracker=github.tracker,
+      key=github.key, name=github.name);
+  }
+
+  /** The ticket in Linear, if there is one. */
+  const linear: Found = await request(@./find_linear(feature=feature));
+
+  if (linear.found) {
+    return @./run_plan(feature=feature, tracker=linear.tracker,
+      key=linear.key, name=linear.name);
+  }
+
+  return `Return: no ticket for ${feature}. Nothing written. Ask the user for
+    the ticket key or link, then stop.`;
+}

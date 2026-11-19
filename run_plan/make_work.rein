@@ -1,0 +1,20 @@
+interface Input {
+  /** The ticket as a file name part, such as ABC-123. */
+  name: string;
+}
+
+/**
+ * The text that makes the work folder of a run, with its notes file. It
+ * changes only that folder.
+ */
+export default function makeWork({ name }: Input) {
+  return `Make the work folder of this run. Run:
+    d="$XDG_CONFIG_HOME"; [ -n "$d" ] || d="$HOME/.config"
+    P="$(readlink -f "$d/rein/programs/npm/node_modules/test-plan")"
+    bash "$P/scripts/make-work.sh" ${name}
+    If $P/scripts/make-work.sh is not a file, stop: return that
+    test-plan is not installed. The script prints the folder. Answer notes:
+    the folder, then /notes.md. Answer plan: the folder, then
+    /test-plan-<the last part of the folder path>.md, which is the sanitized
+    name the script used. Change nothing else.`;
+}

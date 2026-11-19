@@ -1,0 +1,24 @@
+interface Input {
+  /** The ticket key, such as ABC-123. */
+  key: string;
+  /** The notes file that the facts are appended to. */
+  notes: string;
+}
+
+/**
+ * The text that collects the changed surfaces of the linked pull requests and
+ * branches. It changes no code and posts nothing.
+ */
+export default function code({ key, notes }: Input) {
+  return `Read the pull requests and branches that ${notes} links to ${key}.
+    Also search for open and merged pull requests that name ${key} in the title
+    or the body: gh pr list --repo <owner/repo> --state all --limit 100
+    --search ${key}, once for each repository that ${notes} names. Never use
+    the current directory's repository by default. For each, read it with
+    gh pr view and
+    gh pr diff. List the changed surfaces: screens, API routes, feature flags,
+    permissions and roles, and data migrations. Append each to ${notes} as one
+    line, with the pull request link as its source. Answer found yes when at
+    least one line was appended, otherwise no. Post no comment. Change no code.
+    Change nothing else.`;
+}

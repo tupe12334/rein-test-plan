@@ -1,0 +1,20 @@
+interface Input {
+  /** The feature: a Jira key or link, a GitHub or Linear link, or a name. */
+  feature: string;
+}
+
+/**
+ * The text that finds the GitHub issue of a feature. It changes nothing.
+ */
+export default function findGithub({ feature }: Input) {
+  return `Find the GitHub issue of the feature ${feature}. Answer found no when
+    ${feature} is a Jira or Linear link or key. When it is a GitHub issue link,
+    or owner/repo#number, read that issue (gh issue view). When the feature
+    names a repo as owner/repo, search that repo only for the terms of the
+    feature (gh search issues --repo owner/repo). Otherwise answer found no:
+    a search of every repo can match an unrelated ticket. Answer found yes
+    only when exactly one issue fits, otherwise no. Answer tracker: github
+    when found, otherwise none. Answer key: owner/repo#number, or none.
+    Answer name: the key with each character that is not a letter, a digit or
+    a dash changed to a dash, or none. Never guess an issue. Change nothing.`;
+}

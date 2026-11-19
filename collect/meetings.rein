@@ -1,0 +1,25 @@
+interface Input {
+  /** The ticket key, such as ABC-123. */
+  key: string;
+  /** The feature, as the user named it. */
+  feature: string;
+  /** The notes file that the facts are appended to. */
+  notes: string;
+}
+
+/**
+ * The text that collects the requirements, decisions and edge cases said in
+ * meetings. It posts nothing.
+ */
+export default function meetings({ key, feature, notes }: Input) {
+  return `Search the meetings of the Fathom tools (search_meetings or
+    find_relevant_meetings) and of the claude.ai Meetings tools (list_meetings).
+    Skip a tool that is not present. Search by ${key}, by the terms of
+    ${feature}, and by the people named in ${notes}. For each meeting that
+    fits, read its summary and its transcript (get_meeting_summary and
+    get_meeting_transcript). Take the requirements, the decisions and the edge
+    cases said aloud. Append each to ${notes} as one line, with the meeting link
+    as its source. Answer found yes when at least one line was appended,
+    otherwise no. An empty search is not an error. Copy no secret and no
+    customer's personal data. Post nothing. Change nothing else.`;
+}

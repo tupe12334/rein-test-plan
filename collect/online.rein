@@ -1,0 +1,20 @@
+interface Input {
+  /** The feature, as the user named it. */
+  feature: string;
+  /** The notes file that the facts are appended to. */
+  notes: string;
+}
+
+/**
+ * The text that collects public docs the feature needs: product help pages,
+ * standards such as WCAG, and third-party API docs. It posts nothing.
+ */
+export default function online({ feature, notes }: Input) {
+  return `Search the public web (WebSearch) for the pages that the feature
+    ${feature} needs: product help pages, standards such as WCAG, and the
+    third-party API docs that ${notes} names. Read each page that fits
+    (WebFetch). Append each fact to ${notes} as one line, with the page URL as
+    its source. Answer found yes when at least one line was appended, otherwise
+    no. An empty search is not an error. Use no private page. Change nothing
+    else.`;
+}

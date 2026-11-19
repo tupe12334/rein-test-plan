@@ -1,0 +1,85 @@
+interface Input {
+  /** The feature, as the user named it. */
+  feature: string;
+  /** The tracker of the ticket: jira, github or linear. */
+  tracker: string;
+  /** The ticket key, such as ABC-123. */
+  key: string;
+  /** The ticket as a file name part, such as ABC-123. */
+  name: string;
+}
+
+interface Work {
+  /** The notes file of this run, as an absolute path. */
+  notes: string;
+  /** The test plan file of this run, as an absolute path. */
+  plan: string;
+}
+
+interface Ticket {
+  /** Is the ticket read into the notes? */
+  read: boolean;
+}
+
+interface Found {
+  /** Is at least one fact of this source appended to the notes? */
+  found: boolean;
+}
+
+interface Written {
+  /** Is the test plan saved? */
+  written: boolean;
+}
+
+interface Cover {
+  /** Does every criterion and every risk have a test case? */
+  covered: boolean;
+  /** The gaps in the coverage, or none. */
+  gaps: string;
+}
+
+/**
+ * Build the test plan of a ticket: read it, collect the other sources into
+ * the notes, write the plan, and check its coverage. A source with nothing
+ * is not an error.
+ */
+export default async function runPlan({ feature, tracker, key, name }: Input) {
+  /** The work folder, with its notes file and its plan file. */
+  const work: Work = await request(@./run_plan/make_work(name=name));
+  /** The ticket, read into the notes. */
+  const ticket: Ticket = await request(@./read_ticket(tracker=tracker,
+    key=key, notes=work.notes));
+
+  if (!ticket.read) {
+    return `Return: the ticket ${key} could not be read. Nothing posted.`;
+  }
+
+  /** Fathom and claude.ai Meetings, appended to the notes. */
+  const meetings: Found = await request(@./collect/meetings(key=key,
+    feature=feature, notes=work.notes));
+  /** Slack messages, threads and canvases, appended to the notes. */
+  const slack: Found = await request(@./collect/slack(key=key,
+    feature=feature, notes=work.notes));
+  /** Linked pull requests and branches, appended to the notes. */
+  const code: Found = await request(@./collect/code(key=key, notes=work.notes));
+  /** Public docs the feature needs, appended to the notes. */
+  const online: Found = await request(@./collect/online(feature=feature,
+    notes=work.notes));
+  /** The first pass of the plan. */
+  const wrote: Written = await request(@./write_plan(notes=work.notes,
+    plan=work.plan, feature=feature, gaps=`none`));
+  if (!wrote.written) {
+    return `Return: the plan not saved to ${work.plan}. Nothing posted.`;
+  }
+
+  /** The coverage of the first pass. */
+  const cov: Cover = await request(@./check_coverage(notes=work.notes,
+    plan=work.plan));
+
+  if (cov.covered) {
+    return @./deliver(tracker=tracker, key=key, plan=work.plan);
+  }
+
+  return @./revise_plan(feature=feature, tracker=tracker, key=key,
+    notes=work.notes, plan=work.plan, gaps=cov.gaps);
+}
