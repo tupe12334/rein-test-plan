@@ -1,3 +1,14 @@
+import { makeWork } from "./run_plan/make_work";
+import { readTicket } from "./read_ticket";
+import { meetings } from "./collect/meetings";
+import { slack } from "./collect/slack";
+import { code } from "./collect/code";
+import { online } from "./collect/online";
+import { writePlan } from "./write_plan";
+import { checkCoverage } from "./check_coverage";
+import { deliver } from "./deliver";
+import { revisePlan } from "./revise_plan";
+
 interface Input {
   /** The feature, as the user named it. */
   feature: string;
@@ -45,9 +56,9 @@ interface Cover {
  */
 export default async function runPlan({ feature, tracker, key, name }: Input) {
   /** The work folder, with its notes file and its plan file. */
-  const work: Work = await request(@./run_plan/make_work(name=name));
+  const work: Work = await request(makeWork(name=name));
   /** The ticket, read into the notes. */
-  const ticket: Ticket = await request(@./read_ticket(tracker=tracker,
+  const ticket: Ticket = await request(readTicket(tracker=tracker,
     key=key, notes=work.notes));
 
   if (!ticket.read) {
@@ -55,31 +66,31 @@ export default async function runPlan({ feature, tracker, key, name }: Input) {
   }
 
   /** Fathom and claude.ai Meetings, appended to the notes. */
-  const meetings: Found = await request(@./collect/meetings(key=key,
+  const meetings: Found = await request(meetings(key=key,
     feature=feature, notes=work.notes));
   /** Slack messages, threads and canvases, appended to the notes. */
-  const slack: Found = await request(@./collect/slack(key=key,
+  const slack: Found = await request(slack(key=key,
     feature=feature, notes=work.notes));
   /** Linked pull requests and branches, appended to the notes. */
-  const code: Found = await request(@./collect/code(key=key, notes=work.notes));
+  const code: Found = await request(code(key=key, notes=work.notes));
   /** Public docs the feature needs, appended to the notes. */
-  const online: Found = await request(@./collect/online(feature=feature,
+  const online: Found = await request(online(feature=feature,
     notes=work.notes));
   /** The first pass of the plan. */
-  const wrote: Written = await request(@./write_plan(notes=work.notes,
+  const wrote: Written = await request(writePlan(notes=work.notes,
     plan=work.plan, feature=feature, gaps=`none`));
   if (!wrote.written) {
     return `Return: the plan not saved to ${work.plan}. Nothing posted.`;
   }
 
   /** The coverage of the first pass. */
-  const cov: Cover = await request(@./check_coverage(notes=work.notes,
+  const cov: Cover = await request(checkCoverage(notes=work.notes,
     plan=work.plan));
 
   if (cov.covered) {
-    return @./deliver(tracker=tracker, key=key, plan=work.plan);
+    return deliver(tracker=tracker, key=key, plan=work.plan);
   }
 
-  return @./revise_plan(feature=feature, tracker=tracker, key=key,
+  return revisePlan(feature=feature, tracker=tracker, key=key,
     notes=work.notes, plan=work.plan, gaps=cov.gaps);
 }

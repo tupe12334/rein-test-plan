@@ -1,3 +1,8 @@
+import { writePlan } from "./write_plan";
+import { checkCoverage } from "./check_coverage";
+import { deliver } from "./deliver";
+import { reviseAgain } from "./revise_again";
+
 interface Input {
   /** The feature, as the user named it. */
   feature: string;
@@ -32,7 +37,7 @@ interface Cover {
 export default async function revisePlan({ feature, tracker, key, notes,
   plan, gaps }: Input) {
   /** The plan, with a test case for each gap of the first pass. */
-  const wrote: Written = await request(@./write_plan(notes=notes, plan=plan,
+  const wrote: Written = await request(writePlan(notes=notes, plan=plan,
     feature=feature, gaps=gaps));
 
   if (!wrote.written) {
@@ -41,12 +46,12 @@ export default async function revisePlan({ feature, tracker, key, notes,
 
 
   /** The coverage of the plan after the second pass. */
-  const cov: Cover = await request(@./check_coverage(notes=notes, plan=plan));
+  const cov: Cover = await request(checkCoverage(notes=notes, plan=plan));
 
   if (cov.covered) {
-    return @./deliver(tracker=tracker, key=key, plan=plan);
+    return deliver(tracker=tracker, key=key, plan=plan);
   }
 
-  return @./revise_again(feature=feature, tracker=tracker, key=key,
+  return reviseAgain(feature=feature, tracker=tracker, key=key,
     notes=notes, plan=plan, gaps=cov.gaps);
 }

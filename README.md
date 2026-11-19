@@ -5,7 +5,7 @@ A [Rein](https://github.com/tupe12334/rein) program. It builds a test plan for a
 ## Install
 
 ```sh
-rein install -g github:tupe12334/rein-test-plan#v0.1.0
+rein install -g github:tupe12334/rein-test-plan#v0.2.0
 ```
 
 ## Use
@@ -14,7 +14,9 @@ A caller awaits the program with the feature. The `const` needs a doc comment ab
 
 ```text
 /** Build the test plan of a feature, and post it on its ticket. */
-const plan: string = await @test-plan/main(feature=<feature>);
+import { main as testPlan } from "test-plan";
+
+const plan: string = await testPlan(feature=<feature>);
 ```
 
 - `feature`: a Jira key or link, a GitHub or Linear link, or a short feature name.

@@ -1,3 +1,8 @@
+import { writePlan } from "./write_plan";
+import { checkCoverage } from "./check_coverage";
+import { deliver } from "./deliver";
+import { listGaps } from "./list_gaps";
+
 interface Input {
   /** The feature, as the user named it. */
   feature: string;
@@ -38,7 +43,7 @@ interface Listed {
 export default async function reviseAgain({ feature, tracker, key, notes,
   plan, gaps }: Input) {
   /** The plan, with a test case for each gap of the second pass. */
-  const wrote: Written = await request(@./write_plan(notes=notes, plan=plan,
+  const wrote: Written = await request(writePlan(notes=notes, plan=plan,
     feature=feature, gaps=gaps));
 
   if (!wrote.written) {
@@ -47,15 +52,15 @@ export default async function reviseAgain({ feature, tracker, key, notes,
 
 
   /** The coverage of the plan after the last pass. */
-  const cov: Cover = await request(@./check_coverage(notes=notes, plan=plan));
+  const cov: Cover = await request(checkCoverage(notes=notes, plan=plan));
 
   if (cov.covered) {
-    return @./deliver(tracker=tracker, key=key, plan=plan);
+    return deliver(tracker=tracker, key=key, plan=plan);
   }
 
   /** The gaps that no pass closed, listed as open questions. */
-  const listed: Listed = await request(@./list_gaps(plan=plan,
+  const listed: Listed = await request(listGaps(plan=plan,
     gaps=cov.gaps));
 
-  return @./deliver(tracker=tracker, key=key, plan=plan);
+  return deliver(tracker=tracker, key=key, plan=plan);
 }
