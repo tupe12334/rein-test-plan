@@ -5,7 +5,7 @@ A [Rein](https://github.com/tupe12334/rein) program. It builds a test plan for a
 ## Install
 
 ```sh
-rein install -g github:tupe12334/rein-test-plan#v0.2.0
+rein install -g github:tupe12334/rein-test-plan#v0.3.0
 ```
 
 ## Use

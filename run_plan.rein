@@ -1,9 +1,9 @@
 import { makeWork } from "./run_plan/make_work";
 import { readTicket } from "./read_ticket";
-import { meetings } from "./collect/meetings";
-import { slack } from "./collect/slack";
-import { code } from "./collect/code";
-import { online } from "./collect/online";
+import { meetings as openMeetings } from "./collect/meetings";
+import { slack as openSlack } from "./collect/slack";
+import { code as openCode } from "./collect/code";
+import { online as openOnline } from "./collect/online";
 import { writePlan } from "./write_plan";
 import { checkCoverage } from "./check_coverage";
 import { deliver } from "./deliver";
@@ -66,15 +66,15 @@ export default async function runPlan({ feature, tracker, key, name }: Input) {
   }
 
   /** Fathom and claude.ai Meetings, appended to the notes. */
-  const meetings: Found = await request(meetings(key=key,
+  const meetings: Found = await request(openMeetings(key=key,
     feature=feature, notes=work.notes));
   /** Slack messages, threads and canvases, appended to the notes. */
-  const slack: Found = await request(slack(key=key,
+  const slack: Found = await request(openSlack(key=key,
     feature=feature, notes=work.notes));
   /** Linked pull requests and branches, appended to the notes. */
-  const code: Found = await request(code(key=key, notes=work.notes));
+  const code: Found = await request(openCode(key=key, notes=work.notes));
   /** Public docs the feature needs, appended to the notes. */
-  const online: Found = await request(online(feature=feature,
+  const online: Found = await request(openOnline(feature=feature,
     notes=work.notes));
   /** The first pass of the plan. */
   const wrote: Written = await request(writePlan(notes=work.notes,
