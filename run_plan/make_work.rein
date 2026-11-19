@@ -12,5 +12,7 @@ export default function makeWork({ name }: Input) {
     P="$(readlink -f ~/.config/rein/programs/npm/node_modules/test-plan)"
     bash "$P/scripts/make-work.sh" ${name}
     The script prints the folder. Answer notes: the folder, then /notes.md.
-    Answer plan: the folder, then /test-plan-${name}.md. Change nothing else.`;
+    Answer plan: the folder, then /test-plan-<the last part of the folder
+    path>.md, which is the sanitized name the script used. Change nothing
+    else.`;
 }
