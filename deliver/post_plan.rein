@@ -14,7 +14,9 @@ interface Input {
 export default function postPlan({ tracker, key, plan }: Input) {
   return `Post the test plan in ${plan} as a comment on the ticket ${key} of
     the ${tracker} tracker. For jira, use addOrEditJiraIssueComment. For github,
-    use gh issue comment with the body of the file. For linear, use the Linear
+    take the owner, repo and number from the key owner/repo#number, and use gh
+    issue comment <number> --repo <owner/repo> with the body of the file. For
+    linear, use the Linear
     tools. Before posting, check that the plan has no secret, no token and no
     customer's personal data, and remove any you find. Answer posted yes when
     the comment is posted, otherwise no. Answer link: the link of the comment,

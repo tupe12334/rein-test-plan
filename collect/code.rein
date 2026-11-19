@@ -12,7 +12,9 @@ interface Input {
 export default function code({ key, notes }: Input) {
   return `Read the pull requests and branches that ${notes} links to ${key}.
     Also search for open and merged pull requests that name ${key} in the title
-    or the branch (gh pr list --search). For each, read it with gh pr view and
+    or the branch: gh pr list --repo <owner/repo> --search ${key}, once for
+    each repository that ${notes} names. Never use the current directory's
+    repository by default. For each, read it with gh pr view and
     gh pr diff. List the changed surfaces: screens, API routes, feature flags,
     permissions and roles, and data migrations. Append each to ${notes} as one
     line, with the pull request link as its source. Answer found yes when at

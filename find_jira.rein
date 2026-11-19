@@ -11,7 +11,9 @@ export default function findJira({ feature }: Input) {
     ${feature} is a GitHub or Linear link or key. When it is a Jira key or
     link, read that ticket (getJiraIssue). Otherwise search Jira for the
     terms of the feature (searchJiraIssuesUsingJql). Answer found yes only
-    when exactly one ticket fits, otherwise no. Answer tracker: jira when
+    when exactly one ticket fits, otherwise no. Before found yes, read the
+    same key in Linear with the Linear tools: if Linear has an issue with it,
+    answer found no, since the key is ambiguous. Answer tracker: jira when
     found, otherwise none. Answer key: the ticket key, such as ABC-123, or
     none. Answer name: the key with each character that is not a letter, a
     digit or a dash changed to a dash, or none. Never guess a ticket. Change

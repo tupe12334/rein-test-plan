@@ -23,7 +23,7 @@ The answer is one line: `Return: plan <path>. Comment <link>.`, or `Return: plan
 
 ## Process
 
-1. The ticket is found (`main.rein`). Jira is searched first (`find_jira.rein`), then GitHub issues (`find_github.rein`), then Linear (`find_linear.rein`). A search that finds exactly one ticket ends the search. A feature with no ticket asks the user for the ticket, and the process stops.
+1. The ticket is found (`main.rein`). Jira is searched first (`find_jira.rein`), then GitHub issues (`find_github.rein`), then Linear (`find_linear.rein`). A search that finds exactly one ticket ends the search. A search that finds two or more tickets finds none, and the next tracker is searched. A key that Jira and Linear both hold is ambiguous, so it finds none in both. A feature with no ticket asks the user for the ticket, and the process stops.
 2. A work folder is made with its notes file and its plan file (`run_plan/make_work.rein`, `scripts/make-work.sh`). The folder is under the home folder, in `test-plan-work`.
 3. The ticket is read into the notes, with its acceptance criteria, its sub-tasks, its linked pull requests, its docs and its people (`read_ticket.rein`).
 4. Four sources are collected into the notes. Each is a function of its own, and each answers whether it found a fact. A source with nothing is not an error:
